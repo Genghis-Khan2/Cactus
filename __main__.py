@@ -11,9 +11,12 @@ from acl_entry import acl_entry
 from tcp_flags import tcp_flags, tcp_flags_type
 
 
+def parse_arguments():
+
+    parser = ArgumentParser()
+
 
 def main():
-    #TODO: Create properties
     entry = acl_entry()
     entry.src_port.single_port = 5012
     entry.flag_bits+=tcp_flags_type.ack

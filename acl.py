@@ -1,6 +1,8 @@
 from acl_entry import acl_entry
 from tcp_flags import tcp_flags_type
 
+#region ACL 
+
 class acl(object):
 
     def __init__(self):
@@ -54,3 +56,6 @@ class acl(object):
         output_string += f"{'Deny' if self.whitelist else 'Allow'}\t|\tAll\t|\tAll\t|\tAll\t|\tAll\t|\tAll\t|\tAll\t|\t~"
         output_string += "\n" * 3
         return output_string
+#endregion
+
+#TODO: Create JSON serializer for ACL and for connection table
