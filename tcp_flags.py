@@ -7,6 +7,11 @@ class tcp_flags(object):
         self.__list=[]
 
 
+    def __iadd__(self, value):
+        self.append(value)
+        return self
+
+
     def append(self, flag):
         if isinstance(flag, tcp_flags_type) and flag not in self:
             self.__list.append(flag)
@@ -18,6 +23,7 @@ class tcp_flags(object):
         if isinstance(flag, tcp_flags):
             self.__list.remove(flag)
         raise InvalidFlagError("Attempt to remove non TCP-flag type")
+
 
     def __eq__(self, value):
         if isinstance(value, tcp_flags_type):

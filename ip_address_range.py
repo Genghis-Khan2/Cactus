@@ -26,13 +26,13 @@ class ip_address_range(object):
 
 
     @end_address.setter
-    def start_address(self, value):
+    def end_address(self, value):
         #TODO: Check properly for ip address structure
         self.__end_address=value
 #endregion
 #region single_address property
     @property
-    def single_address(self)
+    def single_address(self):
         return self.start_address if self.start_address == self.end_address else None
 
 

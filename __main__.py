@@ -2,45 +2,53 @@ from argparse import ArgumentParser
 import cmd
 import threading
 import logging
-import time
 from scapy.all import *
-import interpret_json
+import packet_filter
+from acl import acl
+from conxion_table import conxion_table
+from conxion_table_entry import conxion_table_entry
+from acl_entry import acl_entry
+from tcp_flags import tcp_flags, tcp_flags_type
 
-
-def log_packet(packet):
-    #logging.info(f'Received packet from {}')
-    pass
-
-def packet_filter_action():
-    logging.info('Packet filter running')
-    #sniff(prn=)
 
 
 def main():
+    #TODO: Create properties
+    entry = acl_entry()
+    entry.src_port.single_port = 5012
+    entry.flag_bits+=tcp_flags_type.ack
+    entry.flag_bits+=tcp_flags_type.syn
+    entry.flag_bits+=tcp_flags_type.rst
+    entry.dest_port.single_port=80
+    entry.dest_port.end_port = 96
+    entry.src_address.single_address="192.168.1.1"
+    entry.src_address.end_address = "192.168.1.3"
+    entry.dest_address.single_address="192.168.10.1"
+    entry.protocol="TCP"
+    entry.check_conxion=False
 
+    entry2 = acl_entry()
+    entry2.src_port.single_port = 5012
+    entry2.flag_bits+=tcp_flags_type.syn
+    entry2.flag_bits+=tcp_flags_type.fin
+    entry2.dest_port.single_port=80
+    entry2.src_address.single_address="10.0.0.1"
+    entry2.dest_address.single_address="8.8.8.8"
+    entry2.protocol="TCP"
+    entry2.check_conxion=True
+    acler = acl()
+    acler.append(entry)
+    acler.append(entry2)
+    print(acler)
 
-    parser = ArgumentParser(description="A python packet filter and application proxy")
-
-    parser.add_argument("--noconfig", action="store_true", help="Don't use an existing file to setup the packet filter")
-    parser.add_argument("--altfile", metavar="path", help="Use an alternate setup file")
-
-    subnet_or_single_group = parser.add_mutually_exclusive_group()  # What this allows is that we may have either a subnet or a single address to filter for
-    subnet_or_single_group.add_argument("--subnet", nargs=2, metavar=("start_address", "end_address"), help="Filter for a range of hosts") 
-    subnet_or_single_group.add_argument("--single", metavar="address", help="Filter for a single host")
-
-    args = parser.parse_args()
-
-    packet_filter = interpret_json.packet_filter()
-
-    if args.subnet is None and args.single is None:  # If no dest filtering is required by command line
-        if packet_filter.whitelist_dest and not packet_filter.src_whitelisted_ips:  # If destination whitelisting is asked for in config and there are whitelisted ips (basically checks if there are ips to filter for)
-            logging.error('Trying to filter packets for no whitelisted ip')
-    logging.basicConfig(filename='main.log', level=logging.INFO, filemode='w')
-    logging.info('Starting thread')
-    filter_thread = threading.Thread(target=packet_filter_action)
-    logging.info('Created thread object')
-    filter_thread.start()
-    logging.info('Started thread')
+    conx = conxion_table()
+    con_entry = conxion_table_entry()
+    con_entry.dest_port = 80
+    con_entry.src_port = 14568
+    con_entry.src_address = "192.168.1.3"
+    con_entry.dest_address = "192.168.0.1"
+    conx += con_entry
+    print(conx)
 
 
 if __name__=="__main__":

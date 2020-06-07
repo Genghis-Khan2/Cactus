@@ -55,7 +55,7 @@ class port_range(object):
 
 
     def __str__(self):
-        return self.single_port if self.single_port else f"{self.start_port} - {self.end_port}"
+        return str(self.single_port) if self.single_port else f"{self.start_port} - {self.end_port}"
 
 
     def __contains__(self, port):
