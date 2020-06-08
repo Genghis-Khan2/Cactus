@@ -59,3 +59,10 @@ class conxion_table_entry(object):
 
     def __str__(self):
         return (f"| {self.src_address}\t|\t{self.dest_address}\t|\t{self.src_port}\t|\t{self.dest_port}")
+
+    
+    def satisfied_by(self, packet):
+        return (packet.src == self.src_address and
+                packet.dst == self.dest_address and
+                packet.sport == self.src_port and
+                packet.dport == self.dest_port)

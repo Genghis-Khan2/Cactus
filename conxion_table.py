@@ -5,6 +5,15 @@ class conxion_table(object):
     def __init__(self):
         self.__list=[]
 
+
+    @property
+    def src_addresses(self):
+        return [entry.src_address for entry in self.__list]
+
+
+    def __getitem__(self, key):
+        return self.__list[key]
+
     
     def __contains__(self, key) :
         return key in self.__list

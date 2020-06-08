@@ -21,11 +21,16 @@ class packet_filter(object):
 
     def filter_function(self, packet):
         if (UDP in packet or TCP in packet) and IP in packet:
-            indices = [i for i, x in enumerate(my_list) if x == packet.src]  # List comprehension to get all the indices of entries who's source matches the packet source
-            if len(indices) != 0:
-                for index in indices:
-                    if self.acl[index].satisfied_by(packet)):
-                        #TODO: Send the packet through
+            acl_indices = [i for i, x in enumerate(self.acl.src_addresses) if x == packet.src]  # List comprehension to get all the acl_indices of entries who's source matches the packet source
+            conxion_indices = [i for i, x in enumerate(self.conxion_table.src_addresses) if x == packet.src]
+                for acl_index in acl_indices:
+                    if self.acl[acl_index].satisfied_by(packet):
+                        if not self.acl[acl_index].check_conxion 
+                            send(packet)
+                        else:
+                            for conxion_index in conxion_indices:
+                                if self.conxion_table[conxion_index].satisfied_by(packet):
+                                    send(packet)
                         return True 
         return False
 
