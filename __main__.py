@@ -3,7 +3,7 @@ import cmd
 import threading
 import logging
 from scapy.all import *
-import packet_filter
+from packet_filter import packet_filter
 from acl import acl
 from conxion_table import conxion_table
 from conxion_table_entry import conxion_table_entry
@@ -11,12 +11,19 @@ from acl_entry import acl_entry
 from tcp_flags import tcp_flags, tcp_flags_type
 
 
+
+
+
 def parse_arguments():
 
-    parser = ArgumentParser()
+    parser = ArgumentParser(description="Cactus Packet Filter")
+    parser.add_argument("--reset", action="store_false", help="Reset the configuration file. Sets back to default")
+    parser.add_argument("--altfile", metavar="Path", help="Alternate file to load configuration from")
+    return parser.parse_args()
 
 
 def main():
+    args = parse_arguments()
     entry = acl_entry()
     entry.src_port.single_port = 5012
     entry.flag_bits+=tcp_flags_type.ack
@@ -29,6 +36,8 @@ def main():
     entry.dest_address.single_address="192.168.10.1"
     entry.protocol="TCP"
     entry.check_conxion=False
+
+    print(entry.__dict__)
 
     entry2 = acl_entry()
     entry2.src_port.single_port = 5012

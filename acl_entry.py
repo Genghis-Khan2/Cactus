@@ -2,6 +2,7 @@ from enum import Enum, auto
 from tcp_flags import tcp_flags
 from ip_address_range import ip_address_range
 from port_range import port_range
+from scapy.all import *
 
 class acl_entry(object):
     """
@@ -109,6 +110,15 @@ class acl_entry(object):
                self.dest_port == value.dest_port and
                self.flag_bits == value.flag_bits and
                self.check_conxion == value.check_conxion)
+
+
+    def satisfied_by(self, packet):
+        return (packet.src in self.src_address and
+            packet.dst in self.dest_address and
+            packet.sport in self.src_port and
+            packet.dport in self.dest_port and
+            packet.proto.upper() == self.protocol and
+            ) #TODO: Check flag bits
 
     
     def __str__(self):  # Readable output

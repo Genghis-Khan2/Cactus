@@ -10,6 +10,10 @@ class acl(object):
         self.__whitelist=True
 
 
+    def __getitem__(self, key):
+        return self.__entries[key]
+
+
 #region whitelist property
     @property
     def whitelist(self):
@@ -20,6 +24,24 @@ class acl(object):
     def whitelist(self, value):
         self.__whitelist = value
 #endregion
+    @property
+    def src_addresses(self):
+        return [entry.src_address for entry in self.__entries]
+
+
+    @property
+    def dest_addresses(self):
+        return [entry.dest_address for entry in self.__entries]
+
+
+    @property
+    def src_ports(self):
+        return [entry.src_port for entry in self.__entries] 
+
+
+    @property
+    def dest_ports(self):
+        return [entry.dest_ports for entry in self.__entries]
 
     
     def __contains__(self, key) :

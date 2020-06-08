@@ -1,6 +1,8 @@
 from parse import parse, compile
+from json import JSONEncoder
 
 
+#region ip_address_range
 class ip_address_range(object):
 
     def __init__(self):
@@ -83,3 +85,8 @@ class ip_address_range(object):
         return (self.single_address 
             if self.single_address 
             else f"{self.start_address} - {self.end_address}")
+#endregion
+
+class ip_address_range_encoder(JSONEncoder):
+    pass
+#TODO: Create serializer
