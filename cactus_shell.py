@@ -37,6 +37,10 @@ class cactus_shell(cmd.Cmd):
         shell.cmdloop()
 
 
+    def help_add(self):
+        print("Add ACL entry")
+
+
     def do_EOF(self, args):
         print()
         return True
