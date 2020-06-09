@@ -1,5 +1,4 @@
 from argparse import ArgumentParser
-import cmd
 import threading
 import logging
 from scapy.all import *
@@ -9,9 +8,7 @@ from conxion_table import conxion_table
 from conxion_table_entry import conxion_table_entry
 from acl_entry import acl_entry
 from tcp_flags import tcp_flags, tcp_flags_type
-
-
-
+from cactus_shell import cactus_shell
 
 
 def parse_arguments():
@@ -24,6 +21,8 @@ def parse_arguments():
 
 def main():
     args = parse_arguments()
+
+
     entry = acl_entry()
     entry.src_port.single_port = 5012
     entry.flag_bits+=tcp_flags_type.ack
@@ -37,7 +36,7 @@ def main():
     entry.protocol="TCP"
     entry.check_conxion=False
 
-    print(entry.__dict__)
+    #print(entry.__dict__)
 
     entry2 = acl_entry()
     entry2.src_port.single_port = 5012
@@ -51,7 +50,7 @@ def main():
     acler = acl()
     acler.append(entry)
     acler.append(entry2)
-    print(acler)
+   # print(acler)
 
     conx = conxion_table()
     con_entry = conxion_table_entry()
@@ -60,8 +59,12 @@ def main():
     con_entry.src_address = "192.168.1.3"
     con_entry.dest_address = "192.168.0.1"
     conx += con_entry
-    print(conx)
-
+    #print(conx)
+    filterer = packet_filter()
+    filterer.acl = acler
+    shell=cactus_shell()
+    shell.packet_filter = filterer
+    shell.cmdloop()
 
 if __name__=="__main__":
     main()

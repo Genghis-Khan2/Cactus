@@ -117,7 +117,7 @@ class acl_entry(object):
             packet.dst in self.dest_address and
             packet.sport in self.src_port and
             packet.dport in self.dest_port and
-            packet.proto.upper() == self.protocol and
+            packet.proto.upper() == self.protocol
             ) #TODO: Check flag bits
 
     
