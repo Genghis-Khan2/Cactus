@@ -21,6 +21,7 @@ def parse_arguments():
 
 def main():
     args = parse_arguments()
+    logging.basicConfig(filename='main.log', level=logging.INFO, filemode='w')
 
 
     entry = acl_entry()
@@ -64,7 +65,11 @@ def main():
     filterer.acl = acler
     shell=cactus_shell()
     shell.packet_filter = filterer
-    shell.cmdloop()
+    logging.info("Starting thread")
+    thread = threading.Thread(target=shell.cmdloop())  # TODO: Run this on a different thread
+    thread.start()
+    logging.info("Thread started")
+    print("Thread started")
 
 if __name__=="__main__":
     main()

@@ -9,6 +9,7 @@ class packet_filter(object):
         self.__conxion_table=conxion_table()
 
 
+#region Properties
     @property
     def acl(self):
         return self.__acl
@@ -21,6 +22,7 @@ class packet_filter(object):
     @property
     def conxion_table(self):
         return self.__conxion_table
+#endregion
 
 
     def filter_function(self, packet):

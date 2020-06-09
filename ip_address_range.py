@@ -1,6 +1,6 @@
 from parse import parse, compile
 from json import JSONEncoder
-
+import socket
 
 #region ip_address_range
 class ip_address_range(object):
@@ -18,8 +18,11 @@ class ip_address_range(object):
 
     @start_address.setter
     def start_address(self, value):
-        #TODO: Check properly for ip address structure
-        self.__start_address=value
+        try:
+            socket.inet_aton(value)
+            self.__start_address = value
+        except socket.error:
+            raise InvalidIP
 #endregion
 #region end_address property
     @property

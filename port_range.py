@@ -29,7 +29,7 @@ class port_range(object):
             self.__end_port = value
         #TODO: Raise exception
 #endregion
-#region single_port property
+#region single_port property    
     @property
     def single_port(self):
         return self.start_port if self.start_port == self.end_port else None
