@@ -66,10 +66,9 @@ def main():
     shell=cactus_shell()
     shell.packet_filter = filterer
     logging.info("Starting thread")
-    thread = threading.Thread(target=shell.cmdloop())  # TODO: Run this on a different thread
-    thread.start()
-    logging.info("Thread started")
-    print("Thread started")
+    threading.Thread(target=packet_filter.run, daemon=True)
+    logging.info("Main: Thread running")
+    shell.cmdloop()
 
 if __name__=="__main__":
     main()
