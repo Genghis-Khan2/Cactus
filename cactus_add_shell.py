@@ -4,6 +4,7 @@ from acl_entry import acl_entry
 from tcp_flags import tcp_flags_type
 from packet_filter import packet_filter
 
+
 class cactus_add_shell(cmd.Cmd):
 
     prompt="(Cactus-Add-ACLEntry) "
@@ -113,7 +114,9 @@ class cactus_add_shell(cmd.Cmd):
     
 
     def do_done(self, args):
+        self.packet_filter.acl.lock.acquire()
         self.packet_filter.acl+=self.entry
+        self.packet_filter.acl.lock.release()
         print()
         return True
 

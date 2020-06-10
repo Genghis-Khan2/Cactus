@@ -1,5 +1,7 @@
 from acl_entry import acl_entry
 from tcp_flags import tcp_flags_type
+from threading import Lock
+
 
 #region ACL 
 
@@ -8,10 +10,16 @@ class acl(object):
     def __init__(self):
         self.__entries=[]
         self.__whitelist=True
+        self.__lock = Lock()
 
 
     def __getitem__(self, key):
         return self.__entries[key]
+
+
+    @property
+    def lock(self):
+        return self.__lock
 
 
 #region whitelist property

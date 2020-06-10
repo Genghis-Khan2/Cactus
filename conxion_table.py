@@ -1,14 +1,21 @@
 import conxion_table_entry
+from threading import Lock
 
 class conxion_table(object):
 
     def __init__(self):
         self.__list=[]
+        self.__lock = Lock()
 
 
     @property
     def src_addresses(self):
         return [entry.src_address for entry in self.__list]
+
+
+    @property
+    def lock(self):
+        return self.__lock
 
 
     def __getitem__(self, key):

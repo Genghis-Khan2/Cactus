@@ -1,6 +1,5 @@
 from argparse import ArgumentParser
 import threading
-import logging
 from scapy.all import *
 from packet_filter import packet_filter
 from acl import acl
@@ -22,7 +21,6 @@ def parse_arguments():
 def main():
     args = parse_arguments()
     logging.basicConfig(filename='main.log', level=logging.INFO, filemode='w')
-
 
     entry = acl_entry()
     entry.src_port.single_port = 5012
@@ -49,8 +47,10 @@ def main():
     entry2.protocol="TCP"
     entry2.check_conxion=True
     acler = acl()
+    acler.lock.acquire()
     acler.append(entry)
     acler.append(entry2)
+    acler.lock.release()
    # print(acler)
 
     conx = conxion_table()
@@ -65,9 +65,9 @@ def main():
     filterer.acl = acler
     shell=cactus_shell()
     shell.packet_filter = filterer
-    logging.info("Starting thread")
-    threading.Thread(target=packet_filter.run, daemon=True)
-    logging.info("Main: Thread running")
+    logger.info("Starting thread")
+    threading.Thread(target=packet_filter.run, daemon=True)  # TODO: Solve race condition. Should be solved. Keep an eye out
+    logger.info("Main: Thread running")
     shell.cmdloop()
 
 if __name__=="__main__":

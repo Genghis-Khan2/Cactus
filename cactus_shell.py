@@ -2,10 +2,12 @@ import cmd
 from packet_filter import packet_filter
 from cactus_add_shell import cactus_add_shell
 
+
 class cactus_shell(cmd.Cmd):
     intro="Welcome to the Cactus shell. Type help or ? for help"
     prompt="(Cactus) "
     packet_filter = packet_filter()
+    ruler="="
 
     def do_mode(self, args):
         tuple_args = self.parse(args)
