@@ -23,9 +23,37 @@ class cactus_shell(cmd.Cmd):
             return
 
 
+    def do_enable(self, args):
+        if self.packet_filter.enabled:
+            print("Already enabled!")
+        else:
+            self.packet_filter.enabled=True
+
+
+    def do_disable(self, args):
+        if self.packet_filter.enabled:
+            self.packet_filter.enabled=False
+        else:
+            print("Already disabled!")
+
+
+    def do_print_state(self, args):
+        print(f"{'enabled' if self.packet_filter.enabled else 'disabled'}")
+
+
     def do_print(self, args):
-        "Prints out the tables"
-        print(self.packet_filter.acl)
+        "Prints out data"
+        tuple_args = self.parse(args)
+        if tuple_args[0].lower() == "acl":
+            print(self.packet_filter.acl)
+        elif tuple_args[0].lower() == "state":
+            print(f'{"enabled" if self.packet_filter.enabled else "disabled"}')
+
+    def complete_print(self, text, line, begidx, endidx):
+        completions=["acl", "state"]
+        mline = line.partition(' ')[2]
+        offs = len(mline) - len(text)
+        return [s[offs:] for s in completions if s.startswith(mline)]
 
     
     def do_exit(self, args):
@@ -52,4 +80,4 @@ class cactus_shell(cmd.Cmd):
         print("mode [blacklist | whitelist]")
 
     def parse(self, args):
-        return tuple(map(str, args.split()))
+        return tuple(map(str, args.strip().split()))

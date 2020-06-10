@@ -126,7 +126,7 @@ class cactus_add_shell(cmd.Cmd):
 
 
     def parse(self, args):
-        return tuple(map(str, args.split()))
+        return tuple(map(str, args.strip().split()))
 
 
     def do_EOF(self, args):

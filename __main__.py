@@ -65,9 +65,9 @@ def main():
     filterer.acl = acler
     shell=cactus_shell()
     shell.packet_filter = filterer
-    logger.info("Starting thread")
+    logging.info("Starting thread")
     threading.Thread(target=packet_filter.run, daemon=True)  # TODO: Solve race condition. Should be solved. Keep an eye out
-    logger.info("Main: Thread running")
+    logging.info("Main: Thread running")
     shell.cmdloop()
 
 if __name__=="__main__":
