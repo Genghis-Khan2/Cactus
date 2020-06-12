@@ -10,6 +10,12 @@ class ip_address_range(object):
         self.__end_address="0.0.0.0"
 
 
+    def copy(self):
+        copy = ip_address_range()
+        copy.tuple_address = self.tuple_address
+        return copy
+
+
 #region start_address property
     @property
     def start_address(self):

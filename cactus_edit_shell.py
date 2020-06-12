@@ -5,60 +5,124 @@ from tcp_flags import tcp_flags_type
 from packet_filter import packet_filter
 
 
-class cactus_add_shell(cmd.Cmd):
+class cactus_edit_shell(cmd.Cmd):
 
-    prompt="(Cactus-Edit) "
-    entry=acl_entry()
-    packet_filter=packet_filter()
+    def __init__(self, index, packet_filter):
+        super(cactus_edit_shell, self).__init__()
+        self.index = index
+        self.packet_filter=packet_filter
+        self.prompt="(Cactus-Edit) "
+        self.entry=packet_filter.acl[index].copy()
 
+#region srcadd
     def do_srcadd(self, args):
         tuple_args = self.parse(args)
-        if len(tuple_args) != 1:
+        if len(tuple_args) == 2:
+            if tuple_args[0].lower() == "range":
+                result = parse.parse("{}-{}", tuple_args[1])
+                if result is None:
+                    raise SyntaxError("Improper parse usage")
+                if result.fixed[1] == "*":
+                    self.entry.src_address=(result.fixed[0], "255.255.255.255")
+                else:
+                    self.entry.src_address = result.fixed
+        elif len(tuple_args) == 1:
+            if tuple_args[0] == "*":
+                self.entry.src_address=("0.0.0.0", "255.255.255.255")
+            else:
+                self.entry.src_address=tuple_args[0]
+        else:
+            print(tuple_args)
             self.help_srcadd()
             return
-        self.entry.src_address=tuple_args[0]
 
 
     def help_srcadd(self):
-        print("Set the source address of the ACL entry. srcadd [address]")
+        print("Set the source address of the ACL entry. srcadd [address] or srcadd range [start_address-end_address]")
+#endregion
     
-
+#region srcprt
     def do_srcprt(self, args):
         tuple_args = self.parse(args)
-        if len(tuple_args) != 1:
+        if len(tuple_args) == 2:
+            if tuple_args[0].lower() == "range":
+                result = parse.parse("{}-{}", tuple_args[1])
+                if result is None:
+                    raise SyntaxError("Improper parse usage")
+                if result.fixed[1] == "*":
+                    self.entry.src_port=(result.fixed[0], 65535)
+                else:
+                    self.entry.src_port = result.fixed
+        elif len(tuple_args) == 1:
+            if tuple_args[0] == "*":
+                self.entry.src_port=(0, 65535)
+            else:
+                self.entry.src_port=tuple_args[0]
+        else:
+            print(tuple_args)
             self.help_srcprt()
             return
-        self.entry.src_port=int(tuple_args[0])
 
 
     def help_srcprt(self):
-        print("Set the source port of the ACL entry. srcprt [port number]")
+        print("Set the source port of the ACL entry. srcprt [port number] or srcprt range [start_port-end_port]")
+#endregion
 
-    
+#region dstadd
     def do_dstadd(self, args):
         tuple_args = self.parse(args)
-        if len(tuple_args) != 1:
+        if len(tuple_args) == 2:
+            if tuple_args[0].lower() == "range":
+                result = parse.parse("{}-{}", tuple_args[1])
+                if result is None:
+                    raise SyntaxError("Improper parse usage")
+                if result.fixed[1] == "*":
+                    self.entry.dest_address=(result.fixed[0], "255.255.255.255")
+                else:
+                    self.entry.dest_address = result.fixed
+        elif len(tuple_args) == 1:
+            if tuple_args[0] == "*":
+                self.entry.dest_port=("0.0.0.0", "255.255.255.255")
+            else:
+                self.entry.dest_address=tuple_args[0]
+        else:
+            print(tuple_args)
             self.help_dstadd()
             return
-        self.entry.dest_address=tuple_args[0]
 
 
     def help_dstadd(self):
         print("Set the destination address of the ACL entry. dstadd [address]")
+#endregion
 
-
+#region dstprt
     def do_dstprt(self, args):
         tuple_args = self.parse(args)
-        if len(tuple_args) != 1:
+        if len(tuple_args) == 2:
+            if tuple_args[0].lower() == "range":
+                result = parse.parse("{}-{}", tuple_args[1])
+                if result is None:
+                    raise SyntaxError("Improper parse usage")
+                if result.fixed[1] == "*":
+                    self.entry.dest_port=(result.fixed[0], 65535)
+                else:
+                    self.entry.dest_port = result.fixed
+        elif len(tuple_args) == 1:
+            if tuple_args[0] == "*":
+                self.entry.dest_port=(0, 65535)
+            else:
+                self.entry.dest_port=tuple_args[0]
+        else:
+            print(tuple_args)
             self.help_dstprt()
             return
-        self.entry.dest_port=int(tuple_args[0])
 
 
     def help_dstprt(self):
         print("Set the destination port of the ACL entry. dstprt [port number]")
+#endregion
 
-
+#region check
     def do_check(self, args):
         tuple_args = self.parse(args)
         if len(tuple_args) != 1:
@@ -75,8 +139,9 @@ class cactus_add_shell(cmd.Cmd):
 
     def help_check(self):
         print("Set the connection checking of the ACL entry. check [true | false]")
+#endregion
 
-
+#region protocol
     def do_protocol(self, args):
         tuple_args = self.parse(args)
         if len(tuple_args) != 1:
@@ -88,7 +153,9 @@ class cactus_add_shell(cmd.Cmd):
     def help_protocol(self):
         print("Set the protocol of the ACL entry. protocol [TCP | UDP]")
 
+#endregion
 
+#region flags
     def do_flags(self, args):
         tuple_args = self.parse(args)
         if len(tuple_args) != 1:
@@ -111,11 +178,13 @@ class cactus_add_shell(cmd.Cmd):
 
     def help_flags(self):
         print("Set the TCP flags of the ACL entry. flags [S | A | F | P | U | R]")
-    
+#endregion
+
+#region done
 
     def do_done(self, args):
         self.packet_filter.acl.lock.acquire()
-        self.packet_filter.acl+=self.entry
+        self.packet_filter.acl[self.index] = self.entry
         self.packet_filter.acl.lock.release()
         print()
         return True
@@ -124,6 +193,12 @@ class cactus_add_shell(cmd.Cmd):
     def help_done(self):
         print("Finish setting up the ACL entry. Make sure to set up properly")
 
+#endregion
+
+#region print
+    def do_print(self, args):
+        print(self.entry)
+#endregion
 
     def parse(self, args):
         return tuple(map(str, args.strip().split()))

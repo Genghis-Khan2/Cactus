@@ -18,6 +18,18 @@ class acl_entry(object):
         self.__flag_bits=tcp_flags()
         self.__check_conxion=True
 
+
+    def copy(self):
+        entry=acl_entry()
+        entry.check_conxion = self.check_conxion
+        entry.flag_bits = self.flag_bits.copy()
+        entry.__src_port = self.src_port.copy()
+        entry.__dest_port=self.dest_port.copy()
+        entry.__src_address=self.src_address.copy()
+        entry.__dest_address=self.dest_address.copy()
+        entry.protocol = self.protocol
+        return entry
+
 #region Properties
 #region src_address property
 
@@ -68,9 +80,9 @@ class acl_entry(object):
     @src_port.setter
     def src_port(self, value):
         if isinstance(value, tuple):
-            self.__src_port.tuple_port = value
+            self.__src_port.tuple_port = (int(value[0]), int(value[1]))
         else:
-            self.__src_port.single_port = value
+            self.__src_port.single_port = int(value)
 #endregion
 #region dest_port property
     @property

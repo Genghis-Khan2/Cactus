@@ -5,6 +5,12 @@ class port_range(object):
         self.__end_port=0
 
 
+    def copy(self):
+        copy = port_range()
+        copy.tuple_port = self.tuple_port
+        return copy
+
+
 #region start_port property
     @property
     def start_port(self):

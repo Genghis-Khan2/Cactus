@@ -1,6 +1,7 @@
 import cmd
 from packet_filter import packet_filter
 from cactus_add_shell import cactus_add_shell
+from cactus_edit_shell import cactus_edit_shell
 
 
 class cactus_shell(cmd.Cmd):
@@ -74,6 +75,16 @@ class cactus_shell(cmd.Cmd):
 
     def help_add(self):
         print("Add ACL entry")
+
+
+    def do_edit(self, args):
+        self.packet_filter.acl.edit_print()
+        entry_num = int(input("Please enter the number the entry you would like to edit: "))
+        if entry_num > len(self.packet_filter.acl):
+            print("Please enter valid entry numbers")
+        else:
+            shell=cactus_edit_shell(entry_num-1, self.packet_filter)
+            shell.cmdloop()
 
 
     def do_EOF(self, args):

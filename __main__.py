@@ -23,6 +23,16 @@ def main():
     logging.basicConfig(filename='main.log', level=logging.INFO, filemode='w')
 
     filterer = packet_filter()
+    entry=acl_entry()
+    entry.dest_address="192.168.0.1"
+    entry.src_address="10.1.1.1"
+    entry.src_port=80
+    entry.dest_port=80
+    entry.flag_bits+=tcp_flags_type.syn
+    entry.flag_bits+=tcp_flags_type.ack
+
+    filterer.acl+=entry
+
     shell=cactus_shell(filterer)
     logging.info("Starting thread")
     threading.Thread(target=packet_filter.run, daemon=True)  # TODO: Solve race condition. Should be solved. Keep an eye out

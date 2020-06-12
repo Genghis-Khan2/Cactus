@@ -12,6 +12,10 @@ class tcp_flags(object):
             self.append(value)
         return self
 
+    def copy(self):
+        copy = tcp_flags()
+        copy.__list = self.__list[:]
+        return copy
 
     def append(self, flag):
         if isinstance(flag, tcp_flags_type) and flag not in self:

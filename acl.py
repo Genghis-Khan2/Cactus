@@ -17,9 +17,17 @@ class acl(object):
         return self.__entries[key]
 
 
+    def __setitem__(self, key, value):
+        self.__entries[key] = value
+
+
     @property
     def lock(self):
         return self.__lock
+
+
+    def __len__(self):
+        return len(self.__entries)
 
 
 #region whitelist property
@@ -86,6 +94,21 @@ class acl(object):
         output_string += f"{'Deny' if self.whitelist else 'Allow'}\t|\tAll\t|\tAll\t|\tAll\t|\tAll\t|\tAll\t|\tAll\t|\t~"
         output_string += "\n" * 3
         return output_string
+
+
+    def edit_print(self):
+        output_string=""
+        output_string += "-"*125+'\n'
+        output_string+="Action\t|\tSource Address\t|\tDest. Address\t|\tSource Port   | Dest. Port | Protocol | Flag Bits | Check Connection\n"
+        output_string += "-"*125+'\n'
+        for i, entry in enumerate(self.__entries):
+            output_string += f"{i+1}. "
+            output_string += "Allow\t" if self.whitelist else "Deny\t"
+            output_string += str(entry)+"\n"
+            output_string += "-"*125+"\n"
+        output_string += f"{'Deny' if self.whitelist else 'Allow'}\t|\tAll\t|\tAll\t|\tAll\t|\tAll\t|\tAll\t|\tAll\t|\t~"
+        output_string += "\n" * 3
+        print(output_string)
 #endregion
 
 #TODO: Create JSON serializer for ACL and for connection table
