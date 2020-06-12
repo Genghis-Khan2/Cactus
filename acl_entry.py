@@ -67,7 +67,10 @@ class acl_entry(object):
 
     @src_port.setter
     def src_port(self, value):
-        self.__src_port = value
+        if isinstance(value, tuple):
+            self.__src_port.tuple_port = value
+        else:
+            self.__src_port.single_port = value
 #endregion
 #region dest_port property
     @property
@@ -77,7 +80,10 @@ class acl_entry(object):
 
     @dest_port.setter
     def dest_port(self, value):
-        self.__dest_port = value
+        if isinstance(value, tuple):
+            self.__dest_port.tuple_port = (int(value[0]), int(value[1]))
+        else:
+            self.__dest_port.single_port = int(value)
 #endregion
 #region flag_bits property
     @property

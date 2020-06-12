@@ -8,7 +8,8 @@ class tcp_flags(object):
 
 
     def __iadd__(self, value):
-        self.append(value)
+        if value not in self:
+            self.append(value)
         return self
 
 

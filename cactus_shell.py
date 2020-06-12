@@ -9,6 +9,11 @@ class cactus_shell(cmd.Cmd):
     packet_filter = packet_filter()
     ruler="="
 
+
+    def __init__(self, packet_filter):
+        super(cactus_shell, self).__init__()
+        self.packet_filter = packet_filter
+
     def do_mode(self, args):
         tuple_args = self.parse(args)
         if len(tuple_args) != 1:
@@ -24,6 +29,7 @@ class cactus_shell(cmd.Cmd):
 
 
     def do_enable(self, args):
+        "Enable the packet filter"
         if self.packet_filter.enabled:
             print("Already enabled!")
         else:
@@ -31,23 +37,22 @@ class cactus_shell(cmd.Cmd):
 
 
     def do_disable(self, args):
+        "Disable the packet filter"
         if self.packet_filter.enabled:
             self.packet_filter.enabled=False
         else:
             print("Already disabled!")
 
 
-    def do_print_state(self, args):
-        print(f"{'enabled' if self.packet_filter.enabled else 'disabled'}")
-
-
     def do_print(self, args):
         "Prints out data"
+        self.packet_filter.acl.lock.acquire()
         tuple_args = self.parse(args)
-        if tuple_args[0].lower() == "acl":
+        if len(tuple_args) == 0 or tuple_args[0].lower() == "acl":
             print(self.packet_filter.acl)
         elif tuple_args[0].lower() == "state":
             print(f'{"enabled" if self.packet_filter.enabled else "disabled"}')
+        self.packet_filter.acl.lock.release()
 
     def complete_print(self, text, line, begidx, endidx):
         completions=["acl", "state"]
@@ -62,7 +67,7 @@ class cactus_shell(cmd.Cmd):
 
 
     def do_add(self, args):
-        shell = cactus_add_shell()
+        shell = cactus_add_shell(self.packet_filter)
         shell.packet_filter = self.packet_filter
         shell.cmdloop()
 
