@@ -80,6 +80,7 @@ class cactus_shell(cmd.Cmd):
 
 
     def do_edit(self, args):
+        "Edit an ACL entry"
         self.packet_filter.acl.edit_print()
         entry_num = int(input("Please enter the number the entry you would like to edit: "))
         if entry_num > len(self.packet_filter.acl):
@@ -90,6 +91,7 @@ class cactus_shell(cmd.Cmd):
 
 
     def do_remove(self, args):
+        "Remove an ACL entry"
         self.packet_filter.acl.edit_print()
         entry_num = int(input("Please enter the number the entry you would like to remove: "))
         if entry_num > len(self.packet_filter.acl):

@@ -201,6 +201,7 @@ class cactus_edit_shell(cmd.Cmd):
 
 #region print
     def do_print(self, args):
+        "Print the entry until now"
         print(self.entry)
 #endregion
 
