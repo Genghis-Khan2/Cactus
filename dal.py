@@ -14,32 +14,29 @@ class dal(object):
     def __del__(self):
         self.__file.close()
 
-
-def write_ip_address_range(ip_address_range):
-    with open(config_file_path, "a") as f:
-        json.dump(ip_address_range, f, cls=encoders.ip_address_range_encoder, indent=4)
-
-
-def write_port_range(port_range):
-    with open(config_file_path, "a") as f:
-        json.dump(port_range, f, cls=encoders.port_range_encoder, indent=4)
+    
+    @property
+    def path(self):
+        return self.__path
 
 
-def write_acl_entry(entry):
-    with open(config_file_path, "a") as f:
-        json.dump(entry, f, cls=encoders.acl_entry_encoder, indent=4)
+    @path.setter
+    def path(self, value):
+        self.__path = value
+        self.__file.close()
+        self.__file = open(self.__path, "r+")
 
 
-def write_acl(acl):
-    with open(config_file_path, "a") as f:
-        json.dump(acl, f, cls=encoders.acl_encoder, indent=4)
+    @property
+    def fileprop(self):
+        return self.__file
 
 
-def write_packet_filter(acl):
-    with open(config_file_path, "a") as f:
-        json.dump(acl, f, cls=encoders.packet_filter_encoder, indent=4)
+    def write_packet_filter(self, acl):
+        #with open(config_file_path, "a") as f:
+        json.dump(acl, self.fileprop, cls=encoders.packet_filter_encoder, indent=4)
 
 
-def read_packet_filter():
-    with open(config_file_path, "r") as f:
-        return json.load(f, cls=decoders.packet_filter_decoder)
+    def read_packet_filter(self):
+        #with open(config_file_path, "r") as f:
+        return json.load(self.fileprop, cls=decoders.packet_filter_decoder)

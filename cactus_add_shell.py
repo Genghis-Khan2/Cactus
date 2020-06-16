@@ -4,6 +4,7 @@ from acl_entry import acl_entry
 from tcp_flags import tcp_flags_type
 from packet_filter import packet_filter
 import parse
+from dal import dal
 
 
 class cactus_add_shell(cmd.Cmd):
@@ -13,6 +14,7 @@ class cactus_add_shell(cmd.Cmd):
         self.packet_filter=packet_filter
         self.entry=acl_entry()
         self.prompt="(Cactus-Add) "
+        self.dal = dal()
 
 
 #region srcadd
@@ -188,6 +190,8 @@ class cactus_add_shell(cmd.Cmd):
         self.packet_filter.acl.lock.acquire()
         self.packet_filter.acl+=self.entry
         self.packet_filter.acl.lock.release()
+        self.dal.fileprop.truncate()
+        self.dal.write_packet_filter(self.packet_filter)
         print()
         return True
 

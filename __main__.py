@@ -8,8 +8,7 @@ from conxion_table_entry import conxion_table_entry
 from acl_entry import acl_entry
 from tcp_flags import tcp_flags, tcp_flags_type
 from cactus_shell import cactus_shell
-import dal
-
+from dal import dal
 
 def parse_arguments():
 
@@ -20,29 +19,11 @@ def parse_arguments():
 
 
 def main():
+    DAL = dal()
     args = parse_arguments()
     logging.basicConfig(filename='main.log', level=logging.INFO, filemode='w')
-
-    filterer = packet_filter()
-    entry=acl_entry()
-    entry.dest_address="192.168.0.1"
-    entry.src_address="10.1.1.1"
-    entry.src_port=80
-    entry.dest_port=(80, 96)
-    entry.flag_bits+=tcp_flags_type.syn
-    entry.flag_bits+=tcp_flags_type.ack
-
-    entry2 = acl_entry()
-    entry2.dest_address="192.168.155.32"
-    entry2.src_address="10.1.1.1"
-    entry2.src_port=112
-    entry2.dest_port=(80, 96)
-    entry2.flag_bits+=tcp_flags_type.syn
-    entry2.flag_bits+=tcp_flags_type.fin
-    entry2.check_conxion=False
-
-    filterer.acl+=entry
-    filterer.acl += entry2
+    
+    filterer = DAL.read_packet_filter()
     
     shell=cactus_shell(filterer)
     logging.info("Starting thread")
