@@ -22,6 +22,11 @@ class acl(object):
 
 
     @property
+    def entries(self):
+        return self.__entries
+
+
+    @property
     def lock(self):
         return self.__lock
 
