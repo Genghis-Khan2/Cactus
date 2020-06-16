@@ -2,6 +2,7 @@ import cmd
 from packet_filter import packet_filter
 from cactus_add_shell import cactus_add_shell
 from cactus_edit_shell import cactus_edit_shell
+from dal import dal
 
 
 class cactus_shell(cmd.Cmd):
@@ -14,6 +15,7 @@ class cactus_shell(cmd.Cmd):
     def __init__(self, packet_filter):
         super(cactus_shell, self).__init__()
         self.packet_filter = packet_filter
+        self.DAL=dal()
 
     def do_mode(self, args):
         tuple_args = self.parse(args)
@@ -85,6 +87,17 @@ class cactus_shell(cmd.Cmd):
         else:
             shell=cactus_edit_shell(entry_num-1, self.packet_filter)
             shell.cmdloop()
+
+
+    def do_remove(self, args):
+        self.packet_filter.acl.edit_print()
+        entry_num = int(input("Please enter the number the entry you would like to remove: "))
+        if entry_num > len(self.packet_filter.acl):
+            print("Please enter valid entry numbers")
+        else:
+            self.packet_filter.acl.remove(self.packet_filter.acl[entry_num - 1])
+            self.DAL.fileprop.truncate()
+            self.DAL.write_packet_filter(self.packet_filter)
 
 
     def do_EOF(self, args):
