@@ -43,13 +43,12 @@ def main():
 
     filterer.acl+=entry
     filterer.acl += entry2
-    #dal.write_packet_filter(filterer)
-    print(dal.read_packet_filter().acl)
+    
     shell=cactus_shell(filterer)
     logging.info("Starting thread")
     threading.Thread(target=packet_filter.run, daemon=True)  # TODO: Solve race condition. Should be solved. Keep an eye out
     logging.info("Main: Thread running")
-    #shell.cmdloop()
+    shell.cmdloop()
 
 if __name__=="__main__":
     main()
