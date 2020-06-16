@@ -40,7 +40,9 @@ class acl_entry(object):
 
     @src_address.setter
     def src_address(self, value):
-        if isinstance(value, tuple):
+        if isinstance(value, ip_address_range):
+            self.__src_address = value.copy()
+        elif isinstance(value, tuple):
             self.__src_address.tuple_address = value
         else:
             self.__src_address.single_address = value
@@ -53,7 +55,9 @@ class acl_entry(object):
 
     @dest_address.setter
     def dest_address(self, value):
-        if isinstance(value, tuple):
+        if isinstance(value, ip_address_range):
+            self.__dest_address = value.copy()
+        elif isinstance(value, tuple):
             self.__dest_address.tuple_address = value
         else:
             self.__dest_address.single_address = value
@@ -79,7 +83,9 @@ class acl_entry(object):
 
     @src_port.setter
     def src_port(self, value):
-        if isinstance(value, tuple):
+        if isinstance(value, port_range):
+            self.__src_port = value.copy()
+        elif isinstance(value, tuple):
             self.__src_port.tuple_port = (int(value[0]), int(value[1]))
         else:
             self.__src_port.single_port = int(value)
@@ -92,7 +98,9 @@ class acl_entry(object):
 
     @dest_port.setter
     def dest_port(self, value):
-        if isinstance(value, tuple):
+        if isinstance(value, port_range):
+            self.__dest_port = value.copy()
+        elif isinstance(value, tuple):
             self.__dest_port.tuple_port = (int(value[0]), int(value[1]))
         else:
             self.__dest_port.single_port = int(value)

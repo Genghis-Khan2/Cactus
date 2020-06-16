@@ -1,5 +1,6 @@
 import json
 import encoders
+import decoders
 
 
 config_file_path = "config.json"
@@ -37,3 +38,8 @@ def write_acl(acl):
 def write_packet_filter(acl):
     with open(config_file_path, "a") as f:
         json.dump(acl, f, cls=encoders.packet_filter_encoder, indent=4)
+
+
+def read_packet_filter():
+    with open(config_file_path, "r") as f:
+        return json.load(f, cls=decoders.packet_filter_decoder)
