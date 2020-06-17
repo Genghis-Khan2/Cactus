@@ -1,5 +1,6 @@
 from parse import parse, compile
-from json import JSONEncoder
+import custom_exceptions
+
 import socket
 
 #region ip_address_range
@@ -28,7 +29,7 @@ class ip_address_range(object):
             socket.inet_aton(value)
             self.__start_address = value
         except socket.error:
-            raise InvalidIP
+            raise custom_exceptions.InvalidIPError()
 #endregion
 #region end_address property
     @property
@@ -38,8 +39,11 @@ class ip_address_range(object):
 
     @end_address.setter
     def end_address(self, value):
-        #TODO: Check properly for ip address structure
-        self.__end_address=value
+        try:
+            socket.inet_aton(value)
+            self.__end_address = value
+        except socket.error:
+            raise custom_exceptions.InvalidIPError()
 #endregion
 #region single_address property
     @property
@@ -59,7 +63,6 @@ class ip_address_range(object):
 
     @tuple_address.setter
     def tuple_address(self, value):
-        #TODO: Make validity check
         self.start_address, self.end_address = value
 #endregion
 
@@ -94,5 +97,8 @@ class ip_address_range(object):
         return (self.single_address 
             if self.single_address 
             else f"{self.start_address} - {self.end_address}")
+
+
+    def __eq__(self, value):
+        return isinstance(value, ip_address_range) and self.tuple_address == value.tuple_address
 #endregion
-#TODO: Create serializer

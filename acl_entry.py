@@ -3,6 +3,7 @@ from tcp_flags import tcp_flags
 from ip_address_range import ip_address_range
 from port_range import port_range
 from scapy.all import *
+import custom_exceptions
 
 class acl_entry(object):
     """
@@ -70,10 +71,15 @@ class acl_entry(object):
 
     @protocol.setter
     def protocol(self, value):
-        if value == "TCP" or value == "UDP":
+        if value == "TCP":
             self.__protocol = value
+        elif value=="UDP":
+            if len(self.flag_bits) == 0:
+                self.__protocol = value
+            else:
+                raise custom_exceptions.InvalidProtocolError("UDP cannot use TCP flags")
         else:
-            pass  #TODO: Throw exception
+            raise custom_exceptions.InvalidProtocolError()
 #endregion
 #region src_port property
     @property
@@ -113,7 +119,10 @@ class acl_entry(object):
 
     @flag_bits.setter
     def flag_bits(self, value):
-        self.__flag_bits = value
+        if protocol == "TCP":
+            self.__flag_bits = value
+        else:
+            raise custom_exceptions.InvalidFlagError("Flags can only be used in TCP")
 #endregion
 #region check_conxion property
     @property
@@ -127,8 +136,9 @@ class acl_entry(object):
 #endregion
 #endregion
 
+
     def __eq__(self, value):
-        #TODO: Create __eq__ for ip_range and port_range
+
         return (self.src_address == value.src_address and
                self.dest_address == value.dest_address and
                self.protocol == value.protocol and
@@ -139,12 +149,14 @@ class acl_entry(object):
 
 
     def satisfied_by(self, packet):
+
         return (packet.src in self.src_address and
             packet.dst in self.dest_address and
             packet.sport in self.src_port and
             packet.dport in self.dest_port and
-            packet.proto.upper() == self.protocol
-            ) #TODO: Check flag bits
+            packet.proto.upper() == self.protocol and
+            self.flag_bits.compare_to_scapy_flags(packet[TCP].flags)
+            )
 
     
     def __str__(self):  # Readable output

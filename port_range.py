@@ -1,3 +1,5 @@
+import custom_exceptions
+
 class port_range(object):
 
     def __init__(self):
@@ -21,7 +23,8 @@ class port_range(object):
     def start_port(self, value):
         if 0 <= value <= 65535:
             self.__start_port = value
-        #TODO: else throw exception
+        else:
+            raise custom_exceptions.InvalidPortError()
 #endregion
 #region end_port property
     @property
@@ -33,7 +36,8 @@ class port_range(object):
     def end_port(self, value):
         if 0 <= value <= 65535:
             self.__end_port = value
-        #TODO: Raise exception
+        else:
+            raise custom_exceptions.InvalidPortError()
 #endregion
 #region single_port property    
     @property
@@ -43,9 +47,7 @@ class port_range(object):
     
     @single_port.setter
     def single_port(self, value):
-        if 0 <= value <= 65535:
-            self.start_port = self.end_port = value
-        #TODO: Raise exception
+        self.start_port = self.end_port = value
 #endregion
 #region tuple_port property
     @property
@@ -55,7 +57,6 @@ class port_range(object):
 
     @tuple_port.setter
     def tuple_port(self, value):
-        #TODO: Check validity
         self.start_port, self.end_port = value
 #endregion
 
@@ -66,3 +67,7 @@ class port_range(object):
 
     def __contains__(self, port):
         return self.start_port <= port <= self.end_port
+
+
+    def __equ__(self, value):
+        return isinstance(value, port_range) and self.tuple_port == value.tuple_port
