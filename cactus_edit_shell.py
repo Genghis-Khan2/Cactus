@@ -39,6 +39,13 @@ class cactus_edit_shell(cmd.Cmd):
             return
 
 
+    def complete_srcadd(self, text, line, begidx, endidx):
+        completions=["range"]
+        mline = line.partition(' ')[2]
+        offs = len(mline) - len(text)
+        return [s[offs:] for s in completions if s.startswith(mline)]
+
+
     def help_srcadd(self):
         print("Set the source address of the ACL entry. srcadd [address] or srcadd range [start_address-end_address]")
 #endregion
@@ -64,6 +71,13 @@ class cactus_edit_shell(cmd.Cmd):
             print(tuple_args)
             self.help_srcprt()
             return
+
+
+    def complete_srcprt(self, text, line, begidx, endidx):
+        completions=["range"]
+        mline = line.partition(' ')[2]
+        offs = len(mline) - len(text)
+        return [s[offs:] for s in completions if s.startswith(mline)]
 
 
     def help_srcprt(self):
@@ -93,6 +107,13 @@ class cactus_edit_shell(cmd.Cmd):
             return
 
 
+    def complete_dstadd(self, text, line, begidx, endidx):
+        completions=["range"]
+        mline = line.partition(' ')[2]
+        offs = len(mline) - len(text)
+        return [s[offs:] for s in completions if s.startswith(mline)]
+
+
     def help_dstadd(self):
         print("Set the destination address of the ACL entry. dstadd [address]")
 #endregion
@@ -118,6 +139,13 @@ class cactus_edit_shell(cmd.Cmd):
             print(tuple_args)
             self.help_dstprt()
             return
+
+
+    def complete_dstprt(self, text, line, begidx, endidx):
+        completions=["range"]
+        mline = line.partition(' ')[2]
+        offs = len(mline) - len(text)
+        return [s[offs:] for s in completions if s.startswith(mline)]
 
 
     def help_dstprt(self):
