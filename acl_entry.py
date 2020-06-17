@@ -1,9 +1,12 @@
 from enum import Enum, auto
-from tcp_flags import tcp_flags
+
+from scapy.all import *
+
+import custom_exceptions
 from ip_address_range import ip_address_range
 from port_range import port_range
-from scapy.all import *
-import custom_exceptions
+from tcp_flags import tcp_flags
+
 
 class acl_entry(object):
     """
@@ -119,7 +122,7 @@ class acl_entry(object):
 
     @flag_bits.setter
     def flag_bits(self, value):
-        if protocol == "TCP":
+        if self.protocol == "TCP":
             self.__flag_bits = value
         else:
             raise custom_exceptions.InvalidFlagError("Flags can only be used in TCP")

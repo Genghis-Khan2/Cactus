@@ -1,6 +1,7 @@
-from enum import Enum, auto
-from InvalidFlag import InvalidFlagError
 from collections import Counter
+from enum import Enum, auto
+
+
 class tcp_flags(object):
 
     def __init__(self):
