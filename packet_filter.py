@@ -46,19 +46,20 @@ class packet_filter(object):
                 for acl_index in acl_indices:
                     if self.acl[acl_index].satisfied_by(packet):
                         if not self.acl[acl_index].check_conxion:
-                            send(packet)
-                            self.acl.lock.release()
                             return True
                         else:
                             for conxion_index in conxion_indices:
                                 if self.conxion_table[conxion_index].satisfied_by(packet):
-                                    send(packet)
-                                    self.acl.lock.release()
                                     return True
             self.acl.lock.release()
             return False
         return True
 
+
+    def packet_passed(packet):
+        send(packet)
+        self.acl.lock.release()
+
     def run(self):
         logging.info("Filtering started")
-        sniff(count=0, lfilter=self.filter_function)
+        sniff(count=0, lfilter=self.filter_function, prn=packet_passed)
