@@ -68,7 +68,8 @@ class packet_filter_encoder(json.JSONEncoder):
             encoder = acl_encoder()
             a = {
             "acl": encoder.default(obj.acl),
-            "enabled": obj.enabled
+            "enabled": obj.enabled,
+            "interfaces": obj.interfaces
             }
 
             return a

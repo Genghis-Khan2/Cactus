@@ -55,10 +55,15 @@ class cactus_shell(cmd.Cmd):
             print(self.packet_filter.acl)
         elif tuple_args[0].lower() == "state":
             print(f'{"enabled" if self.packet_filter.enabled else "disabled"}')
+        elif tuple_args[0].lower() == "interfaces":
+            if len(self.packet_filter.interfaces) > 0:
+                for iface in self.packet_filter.interfaces[:-1]:
+                    print(iface, end=", ")
+                print(self.packet_filter.interfaces[-1])
         self.packet_filter.acl.lock.release()
 
     def complete_print(self, text, line, begidx, endidx):
-        completions=["acl", "state"]
+        completions=["acl", "state", "interfaces"]
         mline = line.partition(' ')[2]
         offs = len(mline) - len(text)
         return [s[offs:] for s in completions if s.startswith(mline)]
@@ -100,6 +105,28 @@ class cactus_shell(cmd.Cmd):
             self.packet_filter.acl.remove(self.packet_filter.acl[entry_num - 1])
             self.DAL.fileprop.truncate()
             self.DAL.write_packet_filter(self.packet_filter)
+
+
+    def do_interface(self, args):
+        tuple_args = self.parse(args)
+        if len(tuple_args) == 2:
+            if tuple_args[0].lower() == "add":
+                if tuple_args[1] not in self.packet_filter.interfaces:
+                    self.packet_filter.interfaces.append(tuple_args[1])
+                    self.packet_filter.interfaces.sort(key=lambda s: s.lower())
+            elif tuple_args[0].lower() == "remove":
+                self.packet_filter.interfaces.remove(tuple_args[1])
+            self.DAL.fileprop.truncate()
+            self.DAL.write_packet_filter(self.packet_filter)
+        else:
+            print("Invalid interface action")
+
+
+    def complete_interface(self, text, line, begidx, endidx):
+        completions=["add", "remove"]
+        mline = line.partition(' ')[2]
+        offs = len(mline) - len(text)
+        return [s[offs:] for s in completions if s.startswith(mline)]
 
 
     def do_EOF(self, args):

@@ -1,6 +1,7 @@
 from acl import acl
 from conxion_table import conxion_table
 from scapy.all import *
+from threading import Lock
 
 class packet_filter(object):
 
@@ -8,6 +9,7 @@ class packet_filter(object):
         self.__acl = acl()
         self.__conxion_table=conxion_table()
         self.__enabled=True
+        self.__interfaces=[]
 
 
 #region Properties
@@ -28,6 +30,16 @@ class packet_filter(object):
     @enabled.setter
     def enabled(self, value):
         self.__enabled = value
+
+
+    @property
+    def interfaces(self):
+        return self.__interfaces
+
+
+    @interfaces.setter
+    def interfaces(self, value):
+        self.__interfaces = value
 
 
     @property
@@ -62,4 +74,4 @@ class packet_filter(object):
 
     def run(self):
         logging.info("Filtering started")
-        sniff(count=0, lfilter=self.filter_function, prn=packet_passed)
+        sniff(count=0, lfilter=self.filter_function, prn=packet_passed, iface=self.interfaces)
