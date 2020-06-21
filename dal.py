@@ -1,6 +1,8 @@
 import json
 import encoders
 import decoders
+import os
+from packet_filter import packet_filter
 
 
 config_file_path = "config.json"
@@ -39,4 +41,6 @@ class dal(object):
 
     def read_packet_filter(self):
         #with open(config_file_path, "r") as f:
+        if not os.path.isfile(config_file_path):
+            return packet_filter()
         return json.load(self.fileprop, cls=decoders.packet_filter_decoder)
