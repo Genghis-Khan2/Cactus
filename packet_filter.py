@@ -68,10 +68,10 @@ class packet_filter(object):
         return True
 
 
-    def packet_passed(packet):
+    def packet_passed(self, packet):
         send(packet)
         self.acl.lock.release()
 
     def run(self):
         logging.info("Filtering started")
-        sniff(count=0, lfilter=self.filter_function, prn=packet_passed, iface=self.interfaces)
+        sniff(count=0, lfilter=self.filter_function, prn=self.packet_passed, iface=self.interfaces)

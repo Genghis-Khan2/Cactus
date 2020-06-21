@@ -27,7 +27,8 @@ def main():
     
     shell=cactus_shell(filterer)
     logging.info("Starting thread")
-    threading.Thread(target=packet_filter.run, daemon=True)  # TODO: Solve race condition. Should be solved. Keep an eye out
+    t = threading.Thread(target=filterer.run, daemon=True)  # TODO: Solve race condition. Should be solved. Keep an eye out
+    t.start()
     logging.info("Main: Thread running")
     shell.cmdloop()
 
