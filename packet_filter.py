@@ -69,6 +69,7 @@ class packet_filter(object):
 
 
     def packet_passed(self, packet):
+        logging.info(packet.show())
         send(packet)
         self.acl.lock.release()
 
