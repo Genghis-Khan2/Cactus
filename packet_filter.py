@@ -52,6 +52,7 @@ class packet_filter(object):
         if self.enabled:
             self.acl.lock.acquire()
             logging.info("Filterering")
+            logging.info(packet.show())
             if (UDP in packet or TCP in packet) and IP in packet:
                 acl_indices = [i for i, x in enumerate(self.acl.src_addresses) if x == packet.src]  # List comprehension to get all the acl_indices of entries who's source matches the packet source
                 conxion_indices = [i for i, x in enumerate(self.conxion_table.src_addresses) if x == packet.src]
