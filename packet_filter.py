@@ -49,7 +49,7 @@ class packet_filter(object):
 
 
     def filter_function(self, packet):
-        if enabled:
+        if self.enabled:
             self.acl.lock.acquire()
             logging.info("Filterering")
             if (UDP in packet or TCP in packet) and IP in packet:
