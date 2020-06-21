@@ -9,9 +9,12 @@ config_file_path = "config.json"
 
 
 class dal(object):
-    def __init__(self, path="config.json"):
+    def __init__(self, path=config_file_path):
         self.__path = path
-        self.__file = open(self.__path, "r+")
+        if not os.path.isfile(self.__path):
+            self.__file = open(self.__path, "w+")
+        else:
+            self.__file = open(self.__path, "r+")
 
     def __del__(self):
         self.__file.close()
@@ -35,12 +38,12 @@ class dal(object):
 
 
     def write_packet_filter(self, acl):
-        #with open(config_file_path, "a") as f:
+
         json.dump(acl, self.fileprop, cls=encoders.packet_filter_encoder, indent=4)
 
 
     def read_packet_filter(self):
-        #with open(config_file_path, "r") as f:
-        if not os.path.isfile(config_file_path):
+
+        if not os.path.isfile(config_file_path) or os.stat(self.path).st_size == 0:
             return packet_filter()
         return json.load(self.fileprop, cls=decoders.packet_filter_decoder)
