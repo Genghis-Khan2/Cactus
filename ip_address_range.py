@@ -81,7 +81,7 @@ class ip_address_range(object):
         start_3 = result['c']
         start_4 = result['d']
 
-        result = p.parse(self.address)
+        result = p.parse(address)
         address_1 = result['a']
         address_2 = result['b']
         address_3 = result['c']
@@ -93,6 +93,10 @@ class ip_address_range(object):
             start_4 <= address_4 <= end_4)
 
     
+    def __repr__(self):
+        return str(self)
+
+
     def __str__(self):
         return (self.single_address 
             if self.single_address 

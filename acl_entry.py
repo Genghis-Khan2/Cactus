@@ -151,15 +151,23 @@ class acl_entry(object):
                self.check_conxion == value.check_conxion)
 
 
-    def satisfied_by(self, packet):
-
-        return (packet.src in self.src_address and
-            packet.dst in self.dest_address and
+    def satisfied_by(self, packet):        
+        return (packet[IP].src in self.src_address and
+            packet[IP].dst in self.dest_address and
             packet.sport in self.src_port and
             packet.dport in self.dest_port and
-            packet.proto.upper() == self.protocol and
+            self.convert_proto(packet.proto).upper() == self.protocol and
             self.flag_bits.compare_to_scapy_flags(packet[TCP].flags)
             )
+
+
+    def convert_proto(self, num):
+        if num == 6:
+            return "TCP"
+        elif num == 17:
+            return "UDP"
+        else:
+            return None
 
     
     def __str__(self):  # Readable output

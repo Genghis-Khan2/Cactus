@@ -48,13 +48,12 @@ class packet_filter(object):
 #endregion
 
 
-    def filter_function(self, packet):
-        if enabled:
-            self.acl.lock.acquire()
-            logging.info("Filterering")
+    def filtering(self, packet):
+        self.acl.lock.acquire()
+        if self.enabled:
             if (UDP in packet or TCP in packet) and IP in packet:
-                acl_indices = [i for i, x in enumerate(self.acl.src_addresses) if x == packet.src]  # List comprehension to get all the acl_indices of entries who's source matches the packet source
-                conxion_indices = [i for i, x in enumerate(self.conxion_table.src_addresses) if x == packet.src]
+                acl_indices=[i for i, x in enumerate(self.acl.src_addresses) if packet[IP].src in x]
+                conxion_indices = [i for i, x in enumerate(self.conxion_table.src_addresses) if x == packet[IP].src]
                 for acl_index in acl_indices:
                     if self.acl[acl_index].satisfied_by(packet):
                         if not self.acl[acl_index].check_conxion:
@@ -63,15 +62,20 @@ class packet_filter(object):
                             for conxion_index in conxion_indices:
                                 if self.conxion_table[conxion_index].satisfied_by(packet):
                                     return True
-            self.acl.lock.release()
+
             return False
         return True
 
 
-    def packet_passed(self, packet):
-        send(packet)
+    def filter_function(self, packet):
+        result = self.filtering(packet)
         self.acl.lock.release()
+        if result:
+            #send(packet)
+            logging.critical(f"Accepted:\n {packet.show(dump=True)}")
+        return result
+
 
     def run(self):
         logging.info("Filtering started")
-        sniff(count=0, lfilter=self.filter_function, prn=self.packet_passed, iface=self.interfaces)
+        sniff(count=0, lfilter=self.filter_function, iface=self.interfaces)
