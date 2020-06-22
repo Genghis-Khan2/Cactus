@@ -115,7 +115,13 @@ class cactus_shell(cmd.Cmd):
                     self.packet_filter.interfaces.append(tuple_args[1])
                     self.packet_filter.interfaces.sort(key=lambda s: s.lower())
             elif tuple_args[0].lower() == "remove":
-                self.packet_filter.interfaces.remove(tuple_args[1])
+                try:
+                    if len(self.packet_filter.interfaces) > 1:
+                        self.packet_filter.interfaces.remove(tuple_args[1])
+                    else:
+                        print("Cannot delete single interface")
+                except ValueError:
+                    print("Value does not exist")
             self.DAL.fileprop.truncate()
             self.DAL.write_packet_filter(self.packet_filter)
         else:

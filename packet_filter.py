@@ -78,4 +78,6 @@ class packet_filter(object):
 
     def run(self):
         logging.info("Filtering started")
+        while len(self.interfaces) == 0:
+            pass
         sniff(count=0, lfilter=self.filter_function, iface=self.interfaces)

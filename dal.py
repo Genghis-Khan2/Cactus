@@ -2,6 +2,7 @@ import json
 import encoders
 import decoders
 import os
+import logging
 from packet_filter import packet_filter
 
 
@@ -45,5 +46,6 @@ class dal(object):
     def read_packet_filter(self):
 
         if not os.path.isfile(config_file_path) or os.stat(self.path).st_size == 0:
+            logging.info("Empty config")
             return packet_filter()
         return json.load(self.fileprop, cls=decoders.packet_filter_decoder)
