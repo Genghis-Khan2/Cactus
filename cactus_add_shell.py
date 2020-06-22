@@ -14,7 +14,7 @@ class cactus_add_shell(cmd.Cmd):
         self.packet_filter=packet_filter
         self.entry=acl_entry()
         self.prompt="(Cactus-Add) "
-        self.dal = dal()
+        self.DAL = dal()
 
 
 #region srcadd
@@ -219,7 +219,7 @@ class cactus_add_shell(cmd.Cmd):
         self.packet_filter.acl+=self.entry
         self.packet_filter.acl.lock.release()
         self.DAL.empty_file()
-        self.dal.write_packet_filter(self.packet_filter)
+        self.DAL.write_packet_filter(self.packet_filter)
         print()
         return True
 

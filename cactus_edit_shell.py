@@ -14,7 +14,7 @@ class cactus_edit_shell(cmd.Cmd):
         self.packet_filter=packet_filter
         self.prompt="(Cactus-Edit) "
         self.entry=packet_filter.acl[index].copy()
-        self.dal = dal()
+        self.DAL = dal()
 
 #region srcadd
     def do_srcadd(self, args):
@@ -217,7 +217,7 @@ class cactus_edit_shell(cmd.Cmd):
         self.packet_filter.acl[self.index] = self.entry
         self.packet_filter.acl.lock.release()
         self.DAL.empty_file()
-        self.dal.write_packet_filter(self.packet_filter)
+        self.DAL.write_packet_filter(self.packet_filter)
         print()
         return True
 
