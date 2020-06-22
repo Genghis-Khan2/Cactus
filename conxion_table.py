@@ -1,5 +1,6 @@
 import conxion_table_entry
 from threading import Lock
+import time
 
 class conxion_table(object):
 
@@ -42,6 +43,17 @@ class conxion_table(object):
 
     def remove(self, value):
         self.__list.remove(value)
+
+
+    def clear(self):
+        self.__list.clear()
+
+
+    def run(self):
+        self.lock.acquire()
+        time.sleep(60)
+        self.clear()
+        self.lock.release()
 
 
     def __str__(self):

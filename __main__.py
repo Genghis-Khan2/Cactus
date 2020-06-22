@@ -10,6 +10,7 @@ from tcp_flags import tcp_flags, tcp_flags_type
 from cactus_shell import cactus_shell
 from dal import dal
 
+
 def parse_arguments():
 
     parser = ArgumentParser(description="Cactus Packet Filter")
@@ -27,8 +28,13 @@ def main():
     
     shell=cactus_shell(filterer)
     logging.info("Starting thread")
-    t = threading.Thread(target=filterer.run, daemon=True)  # TODO: Solve race condition. Should be solved. Keep an eye out
-    t.start()
+
+    packet_filter_thread = threading.Thread(target=filterer.run, daemon=True)
+    packet_filter_thread.start()
+
+    conxion_table_thread = threading.Thread(target=filterer.conxion_table.run, daemon=True)
+    conxion_table_thread.start()
+
     logging.info("Main: Thread running")
     shell.cmdloop()
 
