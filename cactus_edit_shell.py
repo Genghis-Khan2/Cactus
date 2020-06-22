@@ -216,7 +216,7 @@ class cactus_edit_shell(cmd.Cmd):
         self.packet_filter.acl.lock.acquire()
         self.packet_filter.acl[self.index] = self.entry
         self.packet_filter.acl.lock.release()
-        self.dal.fileprop.truncate()
+        self.DAL.empty_file()
         self.dal.write_packet_filter(self.packet_filter)
         print()
         return True

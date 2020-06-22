@@ -49,3 +49,8 @@ class dal(object):
             logging.info("Empty config")
             return packet_filter()
         return json.load(self.fileprop, cls=decoders.packet_filter_decoder)
+
+    
+    def empty_file(self):
+        self.__file.close()
+        self.__file = open(self.path, "w+")

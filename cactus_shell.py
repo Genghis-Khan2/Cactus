@@ -103,7 +103,7 @@ class cactus_shell(cmd.Cmd):
             print("Please enter valid entry numbers")
         else:
             self.packet_filter.acl.remove(self.packet_filter.acl[entry_num - 1])
-            self.DAL.fileprop.truncate()
+            self.DAL.empty_file()
             self.DAL.write_packet_filter(self.packet_filter)
 
 
@@ -122,7 +122,7 @@ class cactus_shell(cmd.Cmd):
                         print("Cannot delete single interface")
                 except ValueError:
                     print("Value does not exist")
-            self.DAL.fileprop.truncate()
+            self.DAL.empty_file()
             self.DAL.write_packet_filter(self.packet_filter)
         else:
             print("Invalid interface action")
