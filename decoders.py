@@ -97,6 +97,6 @@ class packet_filter_decoder(json.JSONDecoder):
         decoder = acl_decoder()
         filterer.acl = decoder.object_hook(dct['acl'])
         filterer.enabled = dct['enabled']
-        filterer.interfaces = dct['interfaces']
+        filterer.interfaces = [iface for iface in dct['interfaces']]
 
         return filterer
