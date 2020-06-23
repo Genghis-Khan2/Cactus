@@ -153,24 +153,6 @@ class cactus_add_shell(cmd.Cmd):
         print("Set the destination port of the ACL entry. dstprt [port number]")
 #endregion
 
-#region check
-    def do_check(self, args):
-        tuple_args = self.parse(args)
-        if len(tuple_args) != 1:
-            self.help_check()
-            return
-        if tuple_args[0].lower() == "true":
-            self.entry.check_conxion = True
-        elif tuple_args[0].lower() == "false":
-            self.entry.check_conxion = False
-        else:
-            self.help_check()
-            return
-
-
-    def help_check(self):
-        print("Set the connection checking of the ACL entry. check [true | false]")
-#endregion
 
 #region protocol
     def do_protocol(self, args):

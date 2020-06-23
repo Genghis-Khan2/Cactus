@@ -32,9 +32,6 @@ def main():
     packet_filter_thread = threading.Thread(target=filterer.run, daemon=True)
     packet_filter_thread.start()
 
-    conxion_table_thread = threading.Thread(target=filterer.conxion_table.run, daemon=True)
-    conxion_table_thread.start()
-
     logging.info("Main: Thread running")
     shell.cmdloop()
 

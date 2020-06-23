@@ -20,12 +20,10 @@ class acl_entry(object):
         self.__src_port=port_range()
         self.__dest_port=port_range()
         self.__flag_bits=tcp_flags()
-        self.__check_conxion=True
 
 
     def copy(self):
         entry=acl_entry()
-        entry.check_conxion = self.check_conxion
         entry.flag_bits = self.flag_bits.copy()
         entry.__src_port = self.src_port.copy()
         entry.__dest_port=self.dest_port.copy()
@@ -127,16 +125,6 @@ class acl_entry(object):
         else:
             raise custom_exceptions.InvalidFlagError("Flags can only be used in TCP")
 #endregion
-#region check_conxion property
-    @property
-    def check_conxion(self):
-        return self.__check_conxion
-
-
-    @check_conxion.setter
-    def check_conxion(self, value):
-        self.__check_conxion = value
-#endregion
 #endregion
 
 
@@ -148,7 +136,6 @@ class acl_entry(object):
                self.src_port == value.src_port and
                self.dest_port == value.dest_port and
                self.flag_bits == value.flag_bits and
-               self.check_conxion == value.check_conxion)
 
 
     def satisfied_by(self, packet):        
@@ -171,4 +158,4 @@ class acl_entry(object):
 
     
     def __str__(self):  # Readable output
-        return f"| {self.src_address}\t|\t{self.dest_address}\t|\t{self.src_port}\t|\t{self.dest_port}\t|\t{self.protocol}\t|\t{self.flag_bits}\t|\t{'X' if self.check_conxion else '-'}"
+        return f"| {self.src_address}\t|\t{self.dest_address}\t|\t{self.src_port}\t|\t{self.dest_port}\t|\t{self.protocol}\t|\t{self.flag_bits}\t"
