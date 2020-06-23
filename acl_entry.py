@@ -135,7 +135,7 @@ class acl_entry(object):
                self.protocol == value.protocol and
                self.src_port == value.src_port and
                self.dest_port == value.dest_port and
-               self.flag_bits == value.flag_bits and
+               self.flag_bits == value.flag_bits)
 
 
     def satisfied_by(self, packet):        

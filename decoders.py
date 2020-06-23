@@ -52,7 +52,6 @@ class acl_entry_decoder(json.JSONDecoder):
         entry.src_port = port_decoder.object_hook(dct['src_port'])
         entry.dest_port = port_decoder.object_hook(dct['dest_port'])
         entry.protocol = dct['protocol']
-        entry.check_conxion = dct['check_conxion']
         string = dct['tcp_flags']
         if 'A' in string:
             entry.flag_bits += tcp_flags_type.ack

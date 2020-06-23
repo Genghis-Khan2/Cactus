@@ -3,8 +3,6 @@ import threading
 from scapy.all import *
 from packet_filter import packet_filter
 from acl import acl
-from conxion_table import conxion_table
-from conxion_table_entry import conxion_table_entry
 from acl_entry import acl_entry
 from tcp_flags import tcp_flags, tcp_flags_type
 from cactus_shell import cactus_shell

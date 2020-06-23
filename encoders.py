@@ -42,7 +42,6 @@ class acl_entry_encoder(json.JSONEncoder):
                 "dest_port": port_range.default(obj.dest_port),
                 "protocol": obj.protocol,
                 "tcp_flags": tcp_flags.default(obj.flag_bits),
-                "check_conxion": obj.check_conxion
             }
             return a
             
