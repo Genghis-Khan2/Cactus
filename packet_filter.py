@@ -52,8 +52,6 @@ class packet_filter(object):
         self.acl.lock.acquire()
         if self.enabled:
             if (UDP in packet or TCP in packet) and IP in packet:
-                if TCP in packet:
-                    logging.info(packet.show(dump=True))
                 acl_indices=[i for i, x in enumerate(self.acl.src_addresses) if packet[IP].src in x]
                 conxion_indices = [i for i, x in enumerate(self.conxion_table.src_addresses) if x == packet[IP].src]
                 for acl_index in acl_indices:
@@ -73,7 +71,7 @@ class packet_filter(object):
         result = self.filtering(packet)
         self.acl.lock.release()
         if result:
-            #send(packet)
+            send(packet, iface="enp0s3", verbose=0)
             logging.critical(f"Accepted:\n {packet.show(dump=True)}")
         return result
 
