@@ -71,7 +71,8 @@ class packet_filter(object):
         result = self.filtering(packet)
         self.acl.lock.release()
         if result:
-            send(packet, iface="enp0s3", verbose=0)
+            forward_packet = packet[Ether].payload
+            send(forward_packet, iface="enp0s3", verbose=0)
             logging.critical(f"Accepted:\n {packet.show(dump=True)}")
         return result
 
