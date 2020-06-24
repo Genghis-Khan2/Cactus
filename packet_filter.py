@@ -57,13 +57,26 @@ class packet_filter(object):
 
 
     def filter_function(self, packet):
-        result = self.filtering(packet)
-        self.acl.lock.release()
-        if result:
-            forward_packet = packet[Ether].payload
-            send(forward_packet, iface="enp0s3", verbose=0)
-            logging.critical(f"Accepted:\n {packet.show(dump=True)}")
-        return result
+        if IP in packet:
+            if self.on_same_subnet(packet):
+                print("Here")
+                forward_packet = packet[Ether].payload
+                send(forward_packet, iface="enp0s8", verbose=0)
+                logging.critical(f"Accepted:\n {packet.show(dump=True)}")
+                return True
+            result = self.filtering(packet)
+            self.acl.lock.release()
+            if result:
+                forward_packet = packet[Ether].payload
+                send(forward_packet, iface="enp0s3", verbose=0)
+                logging.critical(f"Accepted:\n {packet.show(dump=True)}")
+            return result
+        return False
+
+
+    def on_same_subnet(self, packet):
+        print("Here")
+        return packet[IP].src.split(".")[:3] == ["10"]*3
 
 
     def run(self):
