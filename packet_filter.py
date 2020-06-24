@@ -59,23 +59,19 @@ class packet_filter(object):
     def filter_function(self, packet):
         if IP in packet:
             if self.on_same_subnet(packet):
-                print("Here")
-                forward_packet = packet[Ether].payload
-                send(forward_packet, iface="enp0s8", verbose=0)
-                logging.critical(f"Accepted:\n {packet.show(dump=True)}")
+                forward_packet = Ether(dst="08:00:27:b1:5a:cf")/packet[Ether].payload
+                sendp(forward_packet, iface="enp0s8", verbose=0)
                 return True
             result = self.filtering(packet)
             self.acl.lock.release()
             if result:
-                forward_packet = packet[Ether].payload
-                send(forward_packet, iface="enp0s3", verbose=0)
-                logging.critical(f"Accepted:\n {packet.show(dump=True)}")
+                forward_packet = Ether(dst="08:00:27:f0:50:06")/packet[Ether].payload
+                sendp(forward_packet, iface="enp0s3", verbose=0)
             return result
         return False
 
 
     def on_same_subnet(self, packet):
-        print("Here")
         return packet[IP].src.split(".")[:3] == ["10"]*3
 
 
